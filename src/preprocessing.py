@@ -37,7 +37,7 @@ def display_app_info(app_id):
     app_info = app(app_id, lang="en", country="et")
 
     print("=" * 50)
-    print("CBE App Info")
+    print(f"{app_info['title']} App Info")
     print("=" * 50)
     print(f"App Title   : {app_info['title']}")
     print(f"Current Score: {app_info['score']}")
@@ -65,7 +65,7 @@ def scrap_reviews(app_id, num_reviews=700):
     return result
 
 
-def review_dataframe(reviews):
+def review_dataframe(reviews, app_info):
     ""
     raw_data = []
 
@@ -76,7 +76,7 @@ def review_dataframe(reviews):
                 "review": r.get("content", ""),
                 "rating": r.get("score", None),
                 "date": r.get("at", None),
-                "bank": "CBE Bank",
+                "bank": app_info['title'],
                 "source": "Google Play",
             }
         )
@@ -196,12 +196,7 @@ def preprocessing_report(df_raw, df_clean):
 
     print(f"\n  Date range : {df_clean['date'].min()}  to  {df_clean['date'].max()}")
 
-    print("\n  Rating distribution:")
-    for rating in sorted(df_clean["rating"].unique(), reverse=True):
-        count = (df_clean["rating"] == rating).sum()
-        pct = count / final_count * 100
-        bar = "█" * (count // 5)
-        print(f"    {rating} stars : {count:>4} ({pct:4.1f}%)  {bar}")
+    rating_distribution(df_clean)
 
     print("\n  Text length stats:")
     lengths = df_clean["review"].str.len()
