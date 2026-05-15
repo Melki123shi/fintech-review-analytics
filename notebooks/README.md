@@ -8,8 +8,6 @@ This directory contains Jupyter notebooks for collecting and preprocessing app r
 
 ## Notebooks
 
-### `cbe_preprocessing.ipynb`
-
 A comprehensive notebook that handles data collection, cleaning, and preprocessing for CBE app reviews.
 
 **Key Sections:**
@@ -227,8 +225,3 @@ source         : string ("Google Play")
 - **Error Handling**: Monitor console output for warnings about invalid data or API issues
 
 ---
-
-## References
-
-- [google-play-scraper Documentation](https://github.com/JoMingyu/google-play-scraper)
-- [Commercial Bank of Ethiopia App](https://play.google.com/store/apps/details?id=com.combanketh.mobilebanking)
