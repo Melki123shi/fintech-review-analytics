@@ -1,7 +1,10 @@
 import re
 import pandas as pd
-from google_play_scraper import app, reviews, Sort
+from google_play_scraper import app
 import os
+from typing import Any
+
+from langdetect import LangDetectException, detect
 
 
 def clean_review_text(text):
@@ -45,6 +48,7 @@ def display_app_info(app_id):
     print(f"Total Reviews: {app_info['reviews']:,}")
     print(f"Installs     : {app_info['installs']}")
 
+
 def review_dataframe(reviews, app_info):
     ""
     raw_data = []
@@ -56,7 +60,7 @@ def review_dataframe(reviews, app_info):
                 "review": r.get("content", ""),
                 "rating": r.get("score", None),
                 "date": r.get("at", None),
-                "bank": app_info['title'],
+                "bank": app_info["title"],
                 "source": "Google Play",
             }
         )
@@ -146,7 +150,7 @@ def save_cleaned_data(df, output_path):
     """
     Save the cleaned DataFrame to a CSV file.
     """
-    os.makedirs("data/processed", exist_ok=True)
+    os.makedirs("../../data/processed", exist_ok=True)
     df.to_csv(output_path, index=False)
     print(f"Cleaned data saved to {output_path}")
     print(f"Saved to: {output_path}")
@@ -189,3 +193,41 @@ def preprocessing_report(df_raw, df_clean):
         print(f"    - {col}")
 
     print("\n" + "=" * 55)
+
+
+def detect_language(text):
+    """Detect language of a review."""
+
+    if pd.isna(text) or str(text).strip() == "":
+        return "unknown"
+
+    try:
+        return detect(str(text))
+    except LangDetectException:
+        return "unknown"
+
+
+def count_review_languages(df, review_column="review"):
+    """Count reviews grouped by language."""
+
+    df["language"] = df[review_column].apply(detect_language)
+
+    return df["language"].value_counts()
+
+
+def remove_non_english_reviews(df, review_column="review"):
+    """Keep only English reviews."""
+
+    df["language"] = df[review_column].apply(detect_language)
+
+
+    english_df = df[df["language"] == "unknown"].copy()
+
+    removed_reviews = df[df["language"] == "unknown"] 
+    print(removed_reviews[["review", "language"]].head(15))
+
+    print(f"Original reviews: {len(df)}")
+    print(f"English reviews: {len(english_df)}")
+    print(f"Removed reviews: {len(df) - len(english_df)}")
+
+    return english_df
