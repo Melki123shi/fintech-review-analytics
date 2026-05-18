@@ -231,3 +231,4 @@ def remove_non_english_reviews(df, review_column="review"):
     print(f"Removed reviews: {len(df) - len(english_df)}")
 
     return english_df
+
