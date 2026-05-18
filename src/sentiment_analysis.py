@@ -62,13 +62,17 @@ def initialize_sentiment_model(logger, model_name="distilbert-base-uncased-finet
 def download_nltk_resources(logger):
     """
     Download required NLTK resources for tokenization and sentiment analysis.
+    Supports both old (punkt) and new (punkt_tab) NLTK versions.
     """
     from zipfile import BadZipFile
-    resources = ['punkt', 'vader_lexicon', 'averaged_perceptron_tagger']
+    resources = ['punkt', 'punkt_tab', 'vader_lexicon', 'averaged_perceptron_tagger']
     
     for resource in resources:
         try:
-            nltk.data.find(f'tokenizers/{resource}' if resource == 'punkt' else f'corpora/{resource}')
+            if resource in ['punkt', 'punkt_tab']:
+                nltk.data.find(f'tokenizers/{resource}')
+            else:
+                nltk.data.find(f'corpora/{resource}')
             logger.info(f"✓ {resource} already available")
         except (LookupError, BadZipFile):
             logger.info(f"Downloading {resource}...")

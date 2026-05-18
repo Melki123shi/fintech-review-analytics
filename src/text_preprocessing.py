@@ -309,7 +309,7 @@ def prepare_results_dataframe(logger, df, output_columns=None):
     
     return results_df
 
-def save_results_to_csv(logger, df, output_path='data/processed/sentiment_and_themes_analysis.csv'):
+def save_results_to_csv(logger, df, output_path):
     """
     Save analysis results to CSV file.
     
