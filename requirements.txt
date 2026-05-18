@@ -1,3 +1,11 @@
 google-play-scraper
 pandas
 numpy
+nltk
+transformers
+scikit-learn
+tqdm
+torch
+spacy
+matplotlib
+seaborn
